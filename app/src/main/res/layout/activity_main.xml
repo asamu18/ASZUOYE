@@ -4,48 +4,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 1. 主内容区域 -->
-    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
-        <!-- 标题栏 Toolbar -->
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:title="与 小明 聊天中"
-            app:titleTextColor="#FFF" />
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <!-- 聊天列表 -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:title="仿QQ"
+                app:titleTextColor="#FFF" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabIndicatorFullWidth="false" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/inputLayout"
-            android:layout_below="@id/toolbar" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <!-- 悬浮按钮 FAB -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_above="@id/inputLayout"
             android:layout_margin="20dp"
-            android:src="@android:drawable/ic_input_add" />
+            android:src="@android:drawable/ic_menu_send"
+            app:layout_anchor="@id/viewPager"
+            app:layout_anchorGravity="bottom|end" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        <!-- 底部输入框 -->
-        <LinearLayout android:id="@+id/inputLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_alignParentBottom="true" android:orientation="horizontal" android:padding="5dp">
-            <EditText android:id="@+id/inputText" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="说点什么..." />
-            <Button android:id="@+id/sendBtn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="发送" />
-        </LinearLayout>
-    </RelativeLayout>
-
-    <!-- 2. 滑动菜单内容 -->
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navView"
-        android:layout_width="match_parent"
+        android:id="@+id/navViewStart"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:menu="@menu/nav_menu" />
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navViewEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        app:menu="@menu/nav_menu_end" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="搜索" />
+    <item
+        android:id="@+id/nav_scan"
+        android:icon="@android:drawable/ic_menu_camera"
+        android:title="扫一扫" />
+    <item
+        android:id="@+id/nav_night"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="夜间模式（示例）" />
+</menu>
+

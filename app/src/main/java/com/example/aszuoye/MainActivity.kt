@@ -1,72 +1,95 @@
 package com.example.aszuoye
 
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-// 确保下面这一行对应你的包名
-import com.example.aszuoye.Msg
-
-
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import androidx.viewpager2.widget.ViewPager2
+import com.example.aszuoye.ui.MainPagerAdapter
+import com.example.aszuoye.ui.ChatFragment
 
 class MainActivity : AppCompatActivity() {
-    private val msgList = ArrayList<Msg>()
-    private lateinit var adapter: MsgAdapter
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var toggle: ActionBarDrawerToggle
+    private lateinit var viewPager: ViewPager2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // 1. 设置自定义 Toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        // 2. 设置侧滑菜单按钮 (左上角三横线)
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawerLayout)
-        supportActionBar?.let {
-            it.setDisplayHomeAsUpEnabled(true)
-            it.setHomeAsUpIndicator(android.R.drawable.ic_menu_sort_by_size)
+        drawerLayout = findViewById(R.id.drawerLayout)
+        toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        viewPager = findViewById(R.id.viewPager)
+        val tabLayout: TabLayout = findViewById(R.id.tabLayout)
+        viewPager.adapter = MainPagerAdapter(this)
+        val titles = listOf("消息", "联系人", "动态")
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = titles[position]
+        }.attach()
+
+        val navViewStart: NavigationView = findViewById(R.id.navViewStart)
+        val navViewEnd: NavigationView = findViewById(R.id.navViewEnd)
+
+        navViewStart.setNavigationItemSelectedListener { item ->
+            Toast.makeText(this, item.title, Toast.LENGTH_SHORT).show()
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
         }
 
-        // 3. 初始化 RecyclerView
-        msgList.add(Msg("你好啊！", Msg.TYPE_RECEIVED))
-        msgList.add(Msg("你是谁？", Msg.TYPE_SENT))
+        navViewEnd.setNavigationItemSelectedListener { item ->
+            Toast.makeText(this, item.title, Toast.LENGTH_SHORT).show()
+            drawerLayout.closeDrawer(GravityCompat.END)
+            true
+        }
 
-        val recyclerView: androidx.recyclerview.widget.RecyclerView = findViewById(R.id.recyclerView)
-        adapter = MsgAdapter(msgList)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
-
-        // 4. 发送逻辑
-        val sendBtn: Button = findViewById(R.id.sendBtn)
-        val inputText: EditText = findViewById(R.id.inputText)
-        sendBtn.setOnClickListener {
-            val content = inputText.text.toString()
-            if (content.isNotEmpty()) {
-                msgList.add(Msg(content, Msg.TYPE_SENT))
-                adapter.notifyItemInserted(msgList.size - 1)
-                recyclerView.scrollToPosition(msgList.size - 1)
-                inputText.setText("")
+        val fab: FloatingActionButton = findViewById(R.id.fab)
+        fab.setOnClickListener {
+            if (viewPager.currentItem == 0) {
+                val fragment = supportFragmentManager.findFragmentByTag("f0")
+                (fragment as? ChatFragment)?.scrollToBottom()
+            } else {
+                Toast.makeText(this, "FAB 示例：当前页无聊天列表", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    // 关键：点击左上角图标打开侧滑菜单
-    override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawerLayout)
-        when (item.itemId) {
-            android.R.id.home -> drawerLayout.openDrawer(GravityCompat.START)
-        }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_toolbar_menu, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (toggle.onOptionsItemSelected(item)) return true
+        when (item.itemId) {
+            R.id.action_more -> {
+                drawerLayout.openDrawer(GravityCompat.END)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        when {
+            drawerLayout.isDrawerOpen(GravityCompat.END) -> drawerLayout.closeDrawer(GravityCompat.END)
+            drawerLayout.isDrawerOpen(GravityCompat.START) -> drawerLayout.closeDrawer(GravityCompat.START)
+            else -> super.onBackPressed()
+        }
     }
 }

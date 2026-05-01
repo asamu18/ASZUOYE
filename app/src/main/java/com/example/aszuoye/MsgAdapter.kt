@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 class MsgAdapter(val msgList: List<Msg>) : RecyclerView.Adapter<MsgAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val timeText: TextView = view.findViewById(R.id.timeText)
         val leftLayout: FrameLayout = view.findViewById(R.id.leftLayout)
         val rightLayout: FrameLayout = view.findViewById(R.id.rightLayout)
         val leftMsg: TextView = view.findViewById(R.id.leftMsg)
@@ -23,6 +24,12 @@ class MsgAdapter(val msgList: List<Msg>) : RecyclerView.Adapter<MsgAdapter.ViewH
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val msg = msgList[position]
+        if (msg.time.isNotBlank()) {
+            holder.timeText.visibility = View.VISIBLE
+            holder.timeText.text = msg.time
+        } else {
+            holder.timeText.visibility = View.GONE
+        }
         if (msg.type == Msg.TYPE_RECEIVED) {
             holder.leftLayout.visibility = View.VISIBLE
             holder.rightLayout.visibility = View.GONE
