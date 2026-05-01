@@ -9,18 +9,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
-import androidx.viewpager2.widget.ViewPager2
-import com.example.aszuoye.ui.MainPagerAdapter
 import com.example.aszuoye.ui.ChatFragment
+import com.example.aszuoye.ui.NewsListFragment
+import com.example.aszuoye.ui.PlaceholderFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
-    private lateinit var viewPager: ViewPager2
+    private lateinit var bottomNav: BottomNavigationView
+    private lateinit var fab: FloatingActionButton
+
+    private val tagChat = "nav_chat"
+    private val tagContacts = "nav_contacts"
+    private val tagDynamic = "nav_dynamic"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,13 +39,7 @@ class MainActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        viewPager = findViewById(R.id.viewPager)
-        val tabLayout: TabLayout = findViewById(R.id.tabLayout)
-        viewPager.adapter = MainPagerAdapter(this)
-        val titles = listOf("消息", "联系人", "动态")
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = titles[position]
-        }.attach()
+        bottomNav = findViewById(R.id.bottomNav)
 
         val navViewStart: NavigationView = findViewById(R.id.navViewStart)
         val navViewEnd: NavigationView = findViewById(R.id.navViewEnd)
@@ -57,14 +56,23 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        val fab: FloatingActionButton = findViewById(R.id.fab)
+        fab = findViewById(R.id.fab)
         fab.setOnClickListener {
-            if (viewPager.currentItem == 0) {
-                val fragment = supportFragmentManager.findFragmentByTag("f0")
-                (fragment as? ChatFragment)?.scrollToBottom()
-            } else {
-                Toast.makeText(this, "FAB 示例：当前页无聊天列表", Toast.LENGTH_SHORT).show()
+            val current = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+            (current as? ChatFragment)?.scrollToBottom()
+        }
+
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_chat -> switchTo(tagChat) { ChatFragment() }
+                R.id.nav_contacts -> switchTo(tagContacts) { PlaceholderFragment.newInstance("联系人页（占位）") }
+                R.id.nav_dynamic -> switchTo(tagDynamic) { NewsListFragment() }
+                else -> false
             }
+        }
+
+        if (savedInstanceState == null) {
+            bottomNav.selectedItemId = R.id.nav_chat
         }
     }
 
@@ -91,5 +99,30 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.isDrawerOpen(GravityCompat.START) -> drawerLayout.closeDrawer(GravityCompat.START)
             else -> super.onBackPressed()
         }
+    }
+
+    private fun switchTo(tag: String, factory: () -> Fragment): Boolean {
+        val fm = supportFragmentManager
+        val tx = fm.beginTransaction()
+
+        val current = fm.findFragmentById(R.id.fragmentContainer)
+        if (current != null) {
+            tx.hide(current)
+        }
+
+        val target = fm.findFragmentByTag(tag) ?: factory().also {
+            tx.add(R.id.fragmentContainer, it, tag)
+        }
+
+        tx.show(target)
+        tx.commit()
+
+        updateFab(tag)
+        return true
+    }
+
+    private fun updateFab(tag: String) {
+        fab.isEnabled = tag == tagChat
+        fab.alpha = if (tag == tagChat) 1f else 0.4f
     }
 }
