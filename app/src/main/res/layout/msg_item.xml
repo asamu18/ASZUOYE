@@ -1,0 +1,14 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+    <!-- 左侧气泡 -->
+    <FrameLayout android:id="@+id/leftLayout" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="start" android:background="@drawable/msg_left_bg" android:padding="10dp">
+        <TextView android:id="@+id/leftMsg" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#000" />
+    </FrameLayout>
+    <!-- 右侧气泡 -->
+    <FrameLayout android:id="@+id/rightLayout" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="end" android:background="@drawable/msg_right_bg" android:padding="10dp">
+        <TextView android:id="@+id/rightMsg" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#FFF" />
+    </FrameLayout>
+</LinearLayout>

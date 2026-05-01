@@ -1,0 +1,51 @@
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 1. 主内容区域 -->
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
+        <!-- 标题栏 Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:title="与 小明 聊天中"
+            app:titleTextColor="#FFF" />
+
+        <!-- 聊天列表 -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/inputLayout"
+            android:layout_below="@id/toolbar" />
+
+        <!-- 悬浮按钮 FAB -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_above="@id/inputLayout"
+            android:layout_margin="20dp"
+            android:src="@android:drawable/ic_input_add" />
+
+        <!-- 底部输入框 -->
+        <LinearLayout android:id="@+id/inputLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_alignParentBottom="true" android:orientation="horizontal" android:padding="5dp">
+            <EditText android:id="@+id/inputText" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="说点什么..." />
+            <Button android:id="@+id/sendBtn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="发送" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- 2. 滑动菜单内容 -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:menu="@menu/nav_menu" />
+
+</androidx.drawerlayout.widget.DrawerLayout>

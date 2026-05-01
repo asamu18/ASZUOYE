@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ASZUOYE">
+
+        <!-- 主活动：程序入口 -->
+        <!-- 注意：对于 Android 12 及以上版本，包含 intent-filter 的 activity 必须设置 exported="true" -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.ASZUOYE">
+
+            <intent-filter>
+                <!-- 决定这是启动后的第一个页面 -->
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <!-- 第二个活动：MainActivity2 -->
+        <activity
+            android:name=".MainActivity2"
+            android:exported="true">
+
+            <!-- 增加以下 intent-filter 以后，才能演示“隐式调用” -->
+            <intent-filter>
+                <!-- 自定义的动作名称，在代码中调用这个字符串即可启动此 Activity -->
+                <action android:name="com.example.aszuoye.ACTION_START" />
+                <!-- 必须包含默认分类，否则无法接收隐式 Intent -->
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </activity>
+
+    </application>
+
+</manifest>
