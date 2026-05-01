@@ -12,21 +12,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ASZUOYE">
 
-        <!-- 主活动：程序入口 -->
-        <!-- 注意：对于 Android 12 及以上版本，包含 intent-filter 的 activity 必须设置 exported="true" -->
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.ASZUOYE">
 
             <intent-filter>
-                <!-- 决定这是启动后的第一个页面 -->
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
         </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.ASZUOYE" />
 
         <!-- 第二个活动：MainActivity2 -->
         <activity
@@ -45,6 +47,11 @@
 
         <activity
             android:name=".ui.NewsContentActivity"
+            android:exported="false"
+            android:theme="@style/Theme.ASZUOYE" />
+
+        <activity
+            android:name=".ui.UserListActivity"
             android:exported="false"
             android:theme="@style/Theme.ASZUOYE" />
 

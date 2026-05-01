@@ -1,6 +1,7 @@
 package com.example.aszuoye
 
 import android.os.Bundle
+import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -16,6 +17,7 @@ import com.google.android.material.navigation.NavigationView
 import com.example.aszuoye.ui.ChatFragment
 import com.example.aszuoye.ui.NewsListFragment
 import com.example.aszuoye.ui.PlaceholderFragment
+import com.example.aszuoye.ui.UserListActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
@@ -45,7 +47,10 @@ class MainActivity : AppCompatActivity() {
         val navViewEnd: NavigationView = findViewById(R.id.navViewEnd)
 
         navViewStart.setNavigationItemSelectedListener { item ->
-            Toast.makeText(this, item.title, Toast.LENGTH_SHORT).show()
+            when (item.itemId) {
+                R.id.nav_login_users -> startActivity(Intent(this, UserListActivity::class.java))
+                else -> Toast.makeText(this, item.title, Toast.LENGTH_SHORT).show()
+            }
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
