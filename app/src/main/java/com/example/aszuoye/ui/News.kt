@@ -2,7 +2,10 @@ package com.example.aszuoye.ui
 
 data class News(
     val title: String,
-    val content: String
+    val content: String,
+    /** 演示：前台服务下载地址 */
+    val downloadUrl: String,
+    val downloadFileName: String
 )
 
 object NewsRepository {
@@ -17,7 +20,9 @@ object NewsRepository {
                     append("1）左侧列表展示标题\n")
                     append("2）点击后在详情页显示正文\n\n")
                     append("你可以把这里替换成真实接口数据或本地数据库数据。")
-                }
+                },
+                downloadUrl = "https://httpbin.org/json",
+                downloadFileName = "sample_$i.json"
             )
         }
     }

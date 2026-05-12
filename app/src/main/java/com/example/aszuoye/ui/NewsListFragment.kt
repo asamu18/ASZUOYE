@@ -20,6 +20,8 @@ class NewsListFragment : Fragment(R.layout.fragment_news_list) {
             val intent = Intent(requireContext(), NewsContentActivity::class.java)
             intent.putExtra(NewsContentActivity.EXTRA_TITLE, news.title)
             intent.putExtra(NewsContentActivity.EXTRA_CONTENT, news.content)
+            intent.putExtra(NewsContentActivity.EXTRA_DOWNLOAD_URL, news.downloadUrl)
+            intent.putExtra(NewsContentActivity.EXTRA_DOWNLOAD_FILENAME, news.downloadFileName)
             startActivity(intent)
         }
     }

@@ -24,6 +24,14 @@
             android:lineSpacingExtra="4dp"
             android:textColor="#333333"
             android:textSize="15sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/newsDownloadBtn"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/news_download_sample" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
 

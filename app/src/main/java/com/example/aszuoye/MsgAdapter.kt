@@ -37,7 +37,11 @@ class MsgAdapter(val msgList: List<Msg>) : RecyclerView.Adapter<MsgAdapter.ViewH
         } else {
             holder.rightLayout.visibility = View.VISIBLE
             holder.leftLayout.visibility = View.GONE
-            holder.rightMsg.text = msg.content
+            holder.rightMsg.text = if (msg.isFile) {
+                "📎 ${msg.content}"
+            } else {
+                msg.content
+            }
         }
     }
 

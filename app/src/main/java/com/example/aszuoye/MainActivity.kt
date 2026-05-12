@@ -9,10 +9,15 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.MaterialToolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.core.view.OnApplyWindowInsetsListener
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -28,7 +33,6 @@ import com.example.aszuoye.ui.ContactsActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
-    private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var fab: FloatingActionButton
 
@@ -59,20 +63,54 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // API 35+ 常强制边到边；用 insets 顶开 AppBar，避免导航键/菜单与状态栏抢触控
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_main)
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
-
         drawerLayout = findViewById(R.id.drawerLayout)
-        toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close)
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START)
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END)
+
+        val appBarLayout = findViewById<AppBarLayout>(R.id.appBarLayout)
+        ViewCompat.setOnApplyWindowInsetsListener(appBarLayout) { v, insets ->
+            val top = insets.getInsets(
+                WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.setPadding(top.left, top.top, top.right, 0)
+            insets
+        }
+
+        val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(
+            ContextCompat.getDrawable(this, android.R.drawable.ic_menu_sort_by_size)
+        )
+        toolbar.setNavigationOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
 
         bottomNav = findViewById(R.id.bottomNav)
+        ViewCompat.setOnApplyWindowInsetsListener(bottomNav) { v, insets ->
+            val nav = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, nav.bottom)
+            insets
+        }
+
+        ViewCompat.requestApplyInsets(drawerLayout)
 
         val navViewStart: NavigationView = findViewById(R.id.navViewStart)
         val navViewEnd: NavigationView = findViewById(R.id.navViewEnd)
+
+        val navBarPadding = OnApplyWindowInsetsListener { v, insets ->
+            val top = insets.getInsets(
+                WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.displayCutout()
+            ).top
+            v.setPadding(0, top, 0, 0)
+            insets
+        }
+        ViewCompat.setOnApplyWindowInsetsListener(navViewStart, navBarPadding)
+        ViewCompat.setOnApplyWindowInsetsListener(navViewEnd, navBarPadding)
 
         navViewStart.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -134,7 +172,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (toggle.onOptionsItemSelected(item)) return true
         when (item.itemId) {
             R.id.action_simulate_force_logout -> {
                 sendBroadcast(

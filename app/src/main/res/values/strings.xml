@@ -4,4 +4,17 @@
     <string name="drawer_close">关闭侧滑菜单</string>
     <string name="action_simulate_force_logout">模拟强制下线</string>
     <string name="force_logout_default">您的账号已在其他设备登录，被迫下线</string>
+    <string name="chat_pick_file">文件</string>
+    <string name="chat_uploading">正在上传到服务器…</string>
+    <string name="chat_upload_ok">上传成功：%1$s</string>
+    <string name="chat_upload_fail">上传失败：%1$s\n%2$s</string>
+    <string name="news_download_sample">下载示例附件</string>
+    <string name="download_channel_name">文件下载</string>
+    <string name="download_notify_title">下载任务</string>
+    <string name="download_notify_progress">正在下载 %1$s…</string>
+    <string name="download_notify_done">已完成：%1$s（保存在应用下载目录）</string>
+    <string name="download_notify_fail">下载失败：%1$s</string>
+    <string name="download_started_toast">已开始下载（前台服务）</string>
+    <string name="download_need_notification">需要通知权限才能显示下载进度</string>
+    <string name="download_no_url">无可下载地址</string>
 </resources>
