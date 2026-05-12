@@ -18,6 +18,7 @@ import com.example.aszuoye.ui.ChatFragment
 import com.example.aszuoye.ui.NewsListFragment
 import com.example.aszuoye.ui.PlaceholderFragment
 import com.example.aszuoye.ui.UserListActivity
+import com.example.aszuoye.ui.ContactsActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         navViewStart.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_login_users -> startActivity(Intent(this, UserListActivity::class.java))
+                R.id.nav_contacts -> startActivity(Intent(this, ContactsActivity::class.java))
                 else -> Toast.makeText(this, item.title, Toast.LENGTH_SHORT).show()
             }
             drawerLayout.closeDrawer(GravityCompat.START)

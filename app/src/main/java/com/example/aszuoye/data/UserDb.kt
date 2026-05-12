@@ -67,13 +67,12 @@ class UserDb(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VER
     }
 
     companion object {
-        private const val DB_NAME = "users.db"
-        private const val DB_VERSION = 1
+        const val DB_NAME = "users.db"
+        const val DB_VERSION = 1
 
-        private const val TABLE_USERS = "login_users"
-        private const val COL_ID = "_id"
-        private const val COL_USERNAME = "username"
-        private const val COL_LAST_LOGIN = "last_login_at"
+        const val TABLE_USERS = "login_users"
+        const val COL_ID = "_id"
+        const val COL_USERNAME = "username"
+        const val COL_LAST_LOGIN = "last_login_at"
     }
 }
-

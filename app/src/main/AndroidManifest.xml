@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -54,6 +56,16 @@
             android:name=".ui.UserListActivity"
             android:exported="false"
             android:theme="@style/Theme.ASZUOYE" />
+
+        <activity
+            android:name=".ui.ContactsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.ASZUOYE" />
+
+        <provider
+            android:name=".provider.LoginUserProvider"
+            android:authorities="com.example.aszuoye.loginusers"
+            android:exported="true" />
 
     </application>
 
