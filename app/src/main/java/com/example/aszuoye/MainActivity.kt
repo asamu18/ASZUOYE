@@ -1,7 +1,11 @@
 package com.example.aszuoye
 
-import android.os.Bundle
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
+import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -14,6 +18,8 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.example.aszuoye.broadcast.AppBroadcasts
+import com.example.aszuoye.network.NetworkConnectivityHelper
 import com.example.aszuoye.ui.ChatFragment
 import com.example.aszuoye.ui.NewsListFragment
 import com.example.aszuoye.ui.PlaceholderFragment
@@ -25,6 +31,27 @@ class MainActivity : AppCompatActivity() {
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var fab: FloatingActionButton
+
+    /** 动态注册：默认网络回调 */
+    private val networkHelper by lazy {
+        NetworkConnectivityHelper(this) { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /** 动态注册：模拟 QQ 服务端下发的强制下线广播 */
+    private val forceLogoutReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action != AppBroadcasts.ACTION_FORCE_LOGOUT) return
+            val message = intent.getStringExtra(AppBroadcasts.EXTRA_MESSAGE)
+                ?: getString(R.string.force_logout_default)
+            Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
+            startActivity(Intent(this@MainActivity, LoginActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            })
+            finish()
+        }
+    }
 
     private val tagChat = "nav_chat"
     private val tagContacts = "nav_contacts"
@@ -83,6 +110,24 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        networkHelper.register()
+        val filter = IntentFilter(AppBroadcasts.ACTION_FORCE_LOGOUT)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(forceLogoutReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            @Suppress("DEPRECATION")
+            registerReceiver(forceLogoutReceiver, filter)
+        }
+    }
+
+    override fun onStop() {
+        networkHelper.unregister()
+        unregisterReceiver(forceLogoutReceiver)
+        super.onStop()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_toolbar_menu, menu)
         return true
@@ -91,6 +136,18 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (toggle.onOptionsItemSelected(item)) return true
         when (item.itemId) {
+            R.id.action_simulate_force_logout -> {
+                sendBroadcast(
+                    Intent(AppBroadcasts.ACTION_FORCE_LOGOUT).apply {
+                        setPackage(packageName)
+                        putExtra(
+                            AppBroadcasts.EXTRA_MESSAGE,
+                            "您的账号已在其他设备登录，被迫下线（广播模拟）"
+                        )
+                    }
+                )
+                return true
+            }
             R.id.action_more -> {
                 drawerLayout.openDrawer(GravityCompat.END)
                 return true

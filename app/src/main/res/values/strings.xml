@@ -2,4 +2,6 @@
     <string name="app_name">ASZUOYE</string>
     <string name="drawer_open">打开侧滑菜单</string>
     <string name="drawer_close">关闭侧滑菜单</string>
+    <string name="action_simulate_force_logout">模拟强制下线</string>
+    <string name="force_logout_default">您的账号已在其他设备登录，被迫下线</string>
 </resources>
